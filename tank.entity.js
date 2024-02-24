@@ -1,4 +1,5 @@
-import { positionToNumber } from './global-states-storage.js';
+import {positionToNumber} from './global-states-storage.js';
+
 class TankEntity {
 
     sizeX = 61.5
@@ -7,7 +8,7 @@ class TankEntity {
     spriteState
     allSprites
     playerNumber
-    ketPressed
+    keyPressed
     keysState
     positionX
     positionY
@@ -15,7 +16,7 @@ class TankEntity {
     life
     moves = 0
 
-    constructor(playerInit){
+    constructor(playerInit) {
         this.speed = playerInit.speed
         this.life = playerInit.life
         this.positionX = playerInit.positionX
@@ -28,8 +29,8 @@ class TankEntity {
     }
 
     updateSprite(direction) {
-        this.move++;
-        if (this.move % 20 === 0) this.isMoving = !this.isMoving;
+        this.moves++;
+        if (this.moves % 20 === 0) this.isMoving = !this.isMoving;
         const directionIndex = positionToNumber[direction];
         const isMovingIndex = Number(this.isMoving);
         this.spriteState[isMovingIndex][0] = this.allSprites[directionIndex][isMovingIndex][0];
@@ -37,9 +38,10 @@ class TankEntity {
         this.spriteState[isMovingIndex][2] = this.allSprites[directionIndex][isMovingIndex][2];
         this.spriteState[isMovingIndex][3] = this.allSprites[directionIndex][isMovingIndex][3];
     }
+
     tankMovement(canvasWidth, canvasHeight, ctx, $sprite) {
         const [upKey, downKey, leftKey, rightKey] = Object.keys(this.keysState);
-    
+
         if (this.keysState[rightKey] && this.positionX < canvasWidth - this.sizeY) {
             this.positionX += this.speed;
             this.updateSprite('rightKey');
@@ -64,9 +66,9 @@ class TankEntity {
             this.sizeX,
             this.sizeY
         );
-    
-    
-        if (this.move === 1000) this.move = 0;
+
+
+        if (this.moves === 1000) this.move = 0;
         ctx.closePath();
     }
 
