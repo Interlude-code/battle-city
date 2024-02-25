@@ -1,9 +1,12 @@
 import {positionToNumber} from './global-states-storage.js';
+import {Rectangle} from "./rectangle.js";
 
 class TankEntity {
 
-    sizeX = 61.5
-    sizeY = 61.5
+    sizeX = 62
+    sizeY = 62
+    collisionSizeX = 15.5
+    collisionSizeY = 15.5
     isMoving = false
     spriteState
     allSprites
@@ -17,15 +20,22 @@ class TankEntity {
     moves = 0
 
     constructor(playerInit) {
+        const increase = 50;
         this.speed = playerInit.speed
         this.life = playerInit.life
         this.positionX = playerInit.positionX
         this.positionY = playerInit.positionY
         this.keysState = playerInit.keysState
-        this.keyMap = Object.fromEntries(Object.entries(playerInit.keysState).map(([key]) => [key, key]));
         this.playerNumber = playerInit.playerNumber
         this.spriteState = playerInit.initSprite
         this.allSprites = playerInit.allSprites
+        this.spacialPoint = new Rectangle(
+            this.positionX - this.sizeX / 2,
+            this.positionY - this.sizeY / 2,
+            this.sizeX,
+            this.sizeY
+        )
+
     }
 
     updateSprite(direction) {
@@ -41,18 +51,22 @@ class TankEntity {
 
     tankMovement(canvasWidth, canvasHeight, ctx, $sprite) {
         const [upKey, downKey, leftKey, rightKey] = Object.keys(this.keysState);
-
-        if (this.keysState[rightKey] && this.positionX < canvasWidth - this.sizeY) {
+        ctx.beginPath();
+        if (this.keysState[rightKey] && this.positionX < canvasWidth) {
             this.positionX += this.speed;
+            this.spacialPoint.x = this.positionX;
             this.updateSprite('rightKey');
         } else if (this.keysState[leftKey] && this.positionX > 0) {
             this.positionX -= this.speed;
+            this.spacialPoint.x = this.positionX;
             this.updateSprite('leftKey');
         } else if (this.keysState[upKey] && this.positionY > 0) {
             this.positionY -= this.speed;
+            this.spacialPoint.y = this.positionY;
             this.updateSprite('upKey');
-        } else if (this.keysState[downKey] && this.positionY < canvasHeight - this.sizeX) {
+        } else if (this.keysState[downKey] && this.positionY < canvasHeight) {
             this.positionY += this.speed;
+            this.spacialPoint.y = this.positionY;
             this.updateSprite('downKey');
         }
         ctx.drawImage(
@@ -63,12 +77,11 @@ class TankEntity {
             this.spriteState[Number(this.isMoving)][3],
             this.positionX,
             this.positionY,
-            this.sizeX,
-            this.sizeY
+            1,
+            1
         );
 
-
-        if (this.moves === 1000) this.move = 0;
+        if (this.moves === 1000) this.moves = 0;
         ctx.closePath();
     }
 

@@ -1,14 +1,14 @@
 export const keysPlayer1 = {
     ArrowUp: false,
-    ArrowDown : false,
-    ArrowLeft : false,
-    ArrowRight : false
+    ArrowDown: false,
+    ArrowLeft: false,
+    ArrowRight: false
 }
 export const keysPlayer2 = {
     w: false,
-    s : false,
-    a : false,
-    d : false
+    s: false,
+    a: false,
+    d: false
 }
 
 export const positionToNumber = {
@@ -20,26 +20,26 @@ export const positionToNumber = {
 
 export const enemyTank = [
     [
-      [524, 264, 52, 60],
-      [588, 264, 52, 60],
+        [524, 264, 52, 60],
+        [588, 264, 52, 60],
     ],
     [
-      [780, 264, 52, 60],
-      [844, 264, 52, 60],
+        [780, 264, 52, 60],
+        [844, 264, 52, 60],
     ],
     [
-      [648, 272, 60, 52],
-      [712, 272, 60, 52],
+        [648, 272, 60, 52],
+        [712, 272, 60, 52],
     ],
     [
-      [908, 268, 60, 52],
-      [972, 268, 60, 52],
+        [908, 268, 60, 52],
+        [972, 268, 60, 52],
     ],
 ]
 
 export const playerTankSprites = [
     [
-        [4, 8, 52, 52], 
+        [4, 8, 52, 52],
         [68, 8, 52, 52],
     ],
     [
