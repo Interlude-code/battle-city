@@ -1,5 +1,5 @@
-import {positionToNumber} from './global-states-storage.js';
-import {Rectangle} from "./rectangle.js";
+import {positionToNumber} from '../global/constants/constants.js';
+import {Rectangle} from "../utils/rectangle.js";
 
 class TankEntity {
     constructor(playerInit) {
@@ -78,7 +78,6 @@ class TankEntity {
     }
 
     restrictMovement() {
-        console.log(this.isMoving)
         if (this.isMoving) {
             this.restringedDirection = this.direction;
             if (this.restringedDirection === 'right') this.spacialPoint.x -= this.speed;

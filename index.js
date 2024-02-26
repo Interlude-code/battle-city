@@ -1,16 +1,19 @@
-import TankEntity from "./tank.entity.js"
-import initEvents from "./events.handler.js"
-import { playersKeys, playerTankSprites } from './global-states-storage.js'
-import { Quadtree } from "./colitions.js";
-import { Rectangle } from "./rectangle.js";
+import TankEntity from "./entities/tank.entity.js"
+import initEvents from "./global/events/events.handler.js"
+import { drawSquare} from './utils/draw-squeare.function.js'
+import {enemyTank, playersKeys, playerTankSprites} from './global/constants/constants.js'
+import { Quadtree } from "./global/collitions/colitions.js";
+import { Rectangle } from "./utils/rectangle.js";
+import BlockEntity from "./entities/block.entity.js";
 
 const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext('2d')
 
 canvas.width = 806
 canvas.height = 806
+
 const squareSize = 13
-const players = 3  // Cambiado a 3 tanques
+const players = 3
 let squareX = canvas.width / squareSize
 let squareY = canvas.height / squareSize
 let initPositionX = squareX * 4
@@ -20,39 +23,70 @@ const $sprite = document.querySelector('#sprite')
 
 // Crear tanques usando un bucle
 const tanks = [];
-for (let i = 1; i <= players; i++) {
-    const tankInit = {
-        speed: 1,
-        life: 3,
-        positionX: initPositionX * i,
-        positionY: initPositionY,
-        keysState: {...playersKeys[i]},  // Usar teclas diferentes para cada jugador
-        playerNumber: i,
-        initSprite: [
-            [4, 8, 52, 52],
-            [68, 8, 52, 52],
-        ],
-        allSprites: playerTankSprites
-    };
-    tanks.push(new TankEntity(tankInit));
+const blocks = [];
+const player1Init = {
+    speed: 1,
+    life: 3,
+    positionX: initPositionX,
+    positionY: initPositionY,
+    keysState: {...playersKeys[1]},
+    playerNumber: 1,
+    initSprite: [
+        [4, 4, 52, 52],
+        [68, 4, 52, 52],
+    ],
+    allSprites: playerTankSprites
 }
+const player2Init = {
+    speed: 1,
+    life: 3,
+    positionX: initPositionX * 2,
+    positionY: initPositionY,
+    keysState: {...playersKeys[2]},
+    playerNumber: 1,
+    initSprite: [
+        [524, 264, 52, 60],
+        [588, 264, 52, 60],
+    ],
+    allSprites: enemyTank
+}
+const blockInit = {
+    positionX: squareX * 6,
+    positionY: squareY * 6,
+    initSprite: [1116, 128, 60, 62]
+}
+const blockInit2 = {
+    positionX: squareX * 5,
+    positionY: squareY * 6,
+    initSprite: [1116, 128, 60, 62]
+}
+const blockInit3 = {
+    positionX: squareX * 5,
+    positionY: squareY * 7,
+    initSprite: [1054, 2, 60, 62]
+}
+const blockInit4 = {
+    positionX: squareX * 6,
+    positionY: squareY * 7,
+    initSprite: [1054, 2, 60, 62]
+}
+blocks.push(new BlockEntity(blockInit));
+blocks.push(new BlockEntity(blockInit2));
+blocks.push(new BlockEntity(blockInit3));
+blocks.push(new BlockEntity(blockInit4));
+tanks.push(new TankEntity(player1Init));
+tanks.push(new TankEntity(player2Init));
 
-function drawSquare() {
-    ctx.beginPath()
-    for (let i = 0; i <= squareSize; i++) {
-        ctx.rect(squareX * i, 0, 1, canvas.height)
-        ctx.rect(0, squareY * i, canvas.width, 1)
-        ctx.fillStyle = '#fff'
-        ctx.fill()
-    }
-    ctx.closePath()
-}
+
 
 // Crear el quadtree y insertar los tanques
 const boundary = new Rectangle(0, 0, canvas.width, canvas.height);
 const quadtree = new Quadtree(boundary, 4); // El 4 es solo un ejemplo, puedes ajustarlo según tus necesidades
 for (const tank of tanks) {
     quadtree.insert(tank.spacialPoint);
+}
+for (const block of blocks) {
+    quadtree.insert(block.spacialPoint);
 }
 
 function cleanCanvas() {
@@ -66,10 +100,10 @@ let msFPSPrev = window.performance.now() + 1000;
 const msPerFrame = 1000 / fps
 let frames = 0
 let framesPerSec = fps;
-const increase = 50;
 
 function init() {
     window.requestAnimationFrame(init)
+    cleanCanvas()
     const msNow = window.performance.now()
     const msPassed = msNow - msPrev
 
@@ -86,10 +120,11 @@ function init() {
         frames = 0;
     }
 
-    cleanCanvas()
-
     for (const tank of tanks) {
         tank.tankMovement(canvas.width, canvas.height, ctx, $sprite)
+    }
+    for (const block of blocks) {
+        block.drawBlock(ctx, $sprite)
     }
 
     // Realizar colisiones entre tanques
@@ -100,13 +135,11 @@ function init() {
         for (let j = i + 1; j < tanks.length; j++) {
             const tank2 = tanks[j];
             const nearbyTanks2 = quadtree.query(tank2.spacialPoint);
-
+            console.log(nearbyTanks1[0])
+            console.log(nearbyTanks1[1])
             for (const point1 of nearbyTanks1) {
                 for (const point2 of nearbyTanks2) {
                     if (point1.intersects(point2)) {
-                        console.log(
-                            `Colisión entre tanques en dirección ${tank1.direction} y ${tank2.direction}`
-                        );
                         tank1.restrictMovement();
                         tank2.restrictMovement();
                     }
@@ -114,9 +147,9 @@ function init() {
             }
         }
     }
+    //drawSquare(ctx, canvas, 13)
 }
 
-// Inicializar eventos para cada tanque
 const initPromises = tanks.map(tank => initEvents(tank));
 Promise.all(initPromises).then(() => {
     init();

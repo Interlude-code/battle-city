@@ -1,5 +1,4 @@
-//boundary = {x: 0, y: 0, width: 800, height: 800}
-import { Rectangle } from './rectangle.js';
+import { Rectangle } from '../../utils/rectangle.js';
 
 
 
@@ -33,7 +32,6 @@ export class Quadtree {
             this.southeast.insert(point);
             this.southwest.insert(point);
         }
-        console.log(this.points)
     }
 
     // Subdivide el nodo en cuatro subnodos
