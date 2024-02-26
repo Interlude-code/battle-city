@@ -1,14 +1,22 @@
-export const keysPlayer1 = {
-    ArrowUp: false,
-    ArrowDown: false,
-    ArrowLeft: false,
-    ArrowRight: false
-}
-export const keysPlayer2 = {
-    w: false,
-    s: false,
-    a: false,
-    d: false
+export const playersKeys = {
+    1: {
+        ArrowUp: false,
+        ArrowDown: false,
+        ArrowLeft: false,
+        ArrowRight: false
+    },
+    2: {
+        w: false,
+        s: false,
+        a: false,
+        d: false
+    },
+    3: {
+        i: false,
+        k: false,
+        j: false,
+        l: false
+    }
 }
 
 export const positionToNumber = {

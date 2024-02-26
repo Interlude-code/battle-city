@@ -33,6 +33,7 @@ export class Quadtree {
             this.southeast.insert(point);
             this.southwest.insert(point);
         }
+        console.log(this.points)
     }
 
     // Subdivide el nodo en cuatro subnodos
