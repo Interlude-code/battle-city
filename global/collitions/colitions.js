@@ -1,7 +1,5 @@
 import { Rectangle } from '../../utils/rectangle.js';
 
-
-
 export class Quadtree {
     constructor(boundary, capacity) {
         this.boundary = boundary; // Límites del quadtree
@@ -15,22 +13,22 @@ export class Quadtree {
     }
 
     // Inserta un objeto en el quadtree
-    insert(point) {
-        if (!this.boundary.contains(point)) {
+    insert(point, itemNumber) {
+        if (!this.boundary.containsArea(point)) {
             return; // Si el punto no está dentro de los límites, no lo insertamos
         }
 
         if (this.points.length < this.capacity) {
-            this.points.push(point); // Si hay espacio, insertamos el punto
+            this.points.push({point, itemNumber}); // Si hay espacio, insertamos el punto
         } else {
             if (!this.divided) {
                 this.subdivide(); // Si alcanzamos la capacidad, subdividimos si no está subdividido
             }
 
-            this.northeast.insert(point);
-            this.northwest.insert(point);
-            this.southeast.insert(point);
-            this.southwest.insert(point);
+            this.northeast.insert(point, itemNumber);
+            this.northwest.insert(point, itemNumber);
+            this.southeast.insert(point, itemNumber);
+            this.southwest.insert(point, itemNumber);
         }
     }
 
@@ -63,7 +61,7 @@ export class Quadtree {
         }
 
         for (const point of this.points) {
-            if (range.contains(point)) {
+            if (range.containsArea(point.point)) {
                 found.push(point); // Agregamos puntos dentro del rango
             }
         }

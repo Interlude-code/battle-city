@@ -47,8 +47,8 @@ export const enemyTank = [
 
 export const playerTankSprites = [
     [
-        [4, 4, 52, 52],
-        [68, 4, 52, 52],
+        [4, 7, 52, 52],
+        [68, 7, 52, 52],
     ],
     [
         [264, 4, 52, 52],

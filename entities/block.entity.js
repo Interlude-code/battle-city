@@ -5,6 +5,8 @@ class BlockEntity {
         this.sizeX = 62
         this.sizeY = 62
         this.sprite = blockInit.initSprite
+        this.itemNumber = blockInit.itemNumber
+        this.haveCollision = blockInit.haveCollision
         this.spacialPoint = new Rectangle(
             blockInit.positionX,
             blockInit.positionY,

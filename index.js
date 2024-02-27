@@ -25,25 +25,25 @@ const $sprite = document.querySelector('#sprite')
 const tanks = [];
 const blocks = [];
 const player1Init = {
-    speed: 1,
+    speed: 3,
     life: 3,
     positionX: initPositionX,
     positionY: initPositionY,
     keysState: {...playersKeys[1]},
     playerNumber: 1,
     initSprite: [
-        [4, 4, 52, 52],
+        [4, 7, 52, 52],
         [68, 4, 52, 52],
     ],
     allSprites: playerTankSprites
 }
 const player2Init = {
-    speed: 1,
+    speed: 3,
     life: 3,
     positionX: initPositionX * 2,
     positionY: initPositionY,
     keysState: {...playersKeys[2]},
-    playerNumber: 1,
+    playerNumber: 2,
     initSprite: [
         [524, 264, 52, 60],
         [588, 264, 52, 60],
@@ -53,22 +53,30 @@ const player2Init = {
 const blockInit = {
     positionX: squareX * 6,
     positionY: squareY * 6,
-    initSprite: [1116, 128, 60, 62]
+    initSprite: [1116, 128, 60, 62],
+    itemNumber: 3,
+    haveCollision: false
 }
 const blockInit2 = {
     positionX: squareX * 5,
     positionY: squareY * 6,
-    initSprite: [1116, 128, 60, 62]
+    initSprite: [1116, 128, 60, 62],
+    itemNumber: 4,
+    haveCollision: false
 }
 const blockInit3 = {
     positionX: squareX * 5,
     positionY: squareY * 7,
-    initSprite: [1054, 2, 60, 62]
+    initSprite: [1054, 2, 60, 62],
+    itemNumber: 5,
+    haveCollision: true
 }
 const blockInit4 = {
     positionX: squareX * 6,
     positionY: squareY * 7,
-    initSprite: [1054, 2, 60, 62]
+    initSprite: [1054, 2, 60, 62],
+    itemNumber: 6,
+    haveCollision: true
 }
 blocks.push(new BlockEntity(blockInit));
 blocks.push(new BlockEntity(blockInit2));
@@ -76,17 +84,23 @@ blocks.push(new BlockEntity(blockInit3));
 blocks.push(new BlockEntity(blockInit4));
 tanks.push(new TankEntity(player1Init));
 tanks.push(new TankEntity(player2Init));
+const allItems = [
+    ...tanks,
+    ...blocks
+]
 
 
 
 // Crear el quadtree y insertar los tanques
 const boundary = new Rectangle(0, 0, canvas.width, canvas.height);
-const quadtree = new Quadtree(boundary, 4); // El 4 es solo un ejemplo, puedes ajustarlo según tus necesidades
+const quadtree = new Quadtree(boundary, 4, ctx); // El 4 es solo un ejemplo, puedes ajustarlo según tus necesidades
 for (const tank of tanks) {
-    quadtree.insert(tank.spacialPoint);
+    quadtree.insert(tank.spacialPoint, tank.playerNumber);
 }
 for (const block of blocks) {
-    quadtree.insert(block.spacialPoint);
+    if (block.haveCollision){
+        quadtree.insert(block.spacialPoint, block.itemNumber);
+    }
 }
 
 function cleanCanvas() {
@@ -103,7 +117,6 @@ let framesPerSec = fps;
 
 function init() {
     window.requestAnimationFrame(init)
-    cleanCanvas()
     const msNow = window.performance.now()
     const msPassed = msNow - msPrev
 
@@ -120,6 +133,7 @@ function init() {
         frames = 0;
     }
 
+    cleanCanvas()
     for (const tank of tanks) {
         tank.tankMovement(canvas.width, canvas.height, ctx, $sprite)
     }
@@ -127,26 +141,23 @@ function init() {
         block.drawBlock(ctx, $sprite)
     }
 
-    // Realizar colisiones entre tanques
-    for (let i = 0; i < tanks.length - 1; i++) {
-        const tank1 = tanks[i];
-        const nearbyTanks1 = quadtree.query(tank1.spacialPoint);
-
-        for (let j = i + 1; j < tanks.length; j++) {
-            const tank2 = tanks[j];
-            const nearbyTanks2 = quadtree.query(tank2.spacialPoint);
-            console.log(nearbyTanks1[0])
-            console.log(nearbyTanks1[1])
-            for (const point1 of nearbyTanks1) {
-                for (const point2 of nearbyTanks2) {
-                    if (point1.intersects(point2)) {
-                        tank1.restrictMovement();
-                        tank2.restrictMovement();
-                    }
-                }
+    const tanksCollisions = tanks.map(tank => quadtree.query(tank.spacialPoint))
+    tanksCollisions.forEach((tankCollisions, index) => {
+        tankCollisions.forEach((item) => {
+            if (item.itemNumber !== tanks[index].playerNumber) {
+                tanks[index].restrictMovement();
             }
+            tanks[index].isCollisioned = false;
+        })
+    })
+/*    const nearbyTanks1 = quadtree.query(tanks[0].spacialPoint);
+    nearbyTanks1.forEach((item) => {
+        if (item.itemNumber !== tanks[0].playerNumber) {
+            const dato = allItems[item.itemNumber - 1]
+            console.log('colision', item.itemNumber, dato)
+            tanks[0].restrictMovement();
         }
-    }
+    })*/
     //drawSquare(ctx, canvas, 13)
 }
 

@@ -9,6 +9,7 @@ class TankEntity {
         this.direction = 'up'
         this.restringedDirection = 'none'
         this.isMoving = false
+        this.isCollisioned = false
         this.isMovingSprite = false
         this.speed = playerInit.speed
         this.life = playerInit.life
@@ -19,10 +20,16 @@ class TankEntity {
         this.spacialPoint = new Rectangle(
             playerInit.positionX,
             playerInit.positionY,
-            this.sizeX,
-            this.sizeY
+            this.sizeX + 10,
+            this.sizeY + 10
         )
     }
+
+    init(){
+
+    }
+
+
 
     updateSprite(direction) {
         this.moves++;
@@ -37,22 +44,22 @@ class TankEntity {
 
     tankMovement(canvasWidth, canvasHeight, ctx, $sprite) {
         const [upKey, downKey, leftKey, rightKey] = Object.keys(this.keysState);
-        if (this.keysState[rightKey] && this.spacialPoint.x < canvasWidth - this.sizeX && this.restringedDirection !== 'right') {
+        if (this.keysState[rightKey] && this.spacialPoint.x < canvasWidth - this.sizeX && this.restringedDirection !== 'right' && !this.isCollisioned) {
             this.spacialPoint.x += this.speed;
             this.direction = 'right'
             this.isMoving = true
             this.updateSprite('rightKey');
-        } else if (this.keysState[leftKey] && this.spacialPoint.x > 0 && this.restringedDirection !== 'left') {
+        } else if (this.keysState[leftKey] && this.spacialPoint.x > 0 && this.restringedDirection !== 'left' && !this.isCollisioned) {
             this.spacialPoint.x -= this.speed;
             this.direction = 'left'
             this.isMoving = true
             this.updateSprite('leftKey');
-        } else if (this.keysState[upKey] && this.spacialPoint.y > 0 && this.restringedDirection !== 'up') {
+        } else if (this.keysState[upKey] && this.spacialPoint.y > 0 && this.restringedDirection !== 'up' && !this.isCollisioned){
             this.spacialPoint.y -= this.speed;
             this.direction = 'up'
             this.isMoving = true
             this.updateSprite('upKey');
-        } else if (this.keysState[downKey] && this.spacialPoint.y < canvasHeight - this.sizeY && this.restringedDirection !== 'down') {
+        } else if (this.keysState[downKey] && this.spacialPoint.y < canvasHeight - this.sizeY && this.restringedDirection !== 'down' && !this.isCollisioned){
             this.spacialPoint.y += this.speed;
             this.direction = 'down'
             this.isMoving = true
@@ -78,12 +85,13 @@ class TankEntity {
     }
 
     restrictMovement() {
+        this.isCollisioned = true
         if (this.isMoving) {
             this.restringedDirection = this.direction;
-            if (this.restringedDirection === 'right') this.spacialPoint.x -= this.speed;
-            else if (this.restringedDirection === 'left') this.spacialPoint.x += this.speed;
-            else if (this.restringedDirection === 'up') this.spacialPoint.y += this.speed;
-            else if (this.restringedDirection === 'down') this.spacialPoint.y -= this.speed;
+            /*            if (this.restringedDirection === 'right') this.spacialPoint.x -= 1;
+                        else if (this.restringedDirection === 'left') this.spacialPoint.x += 1;
+                        else if (this.restringedDirection === 'up') this.spacialPoint.y += 1;
+                        else if (this.restringedDirection === 'down') this.spacialPoint.y -= 1;*/
         }
 
     }

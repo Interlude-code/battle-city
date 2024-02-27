@@ -7,11 +7,11 @@ export class Rectangle {
     }
 
     // Verifica si este rectángulo contiene un punto (x, y)
-    contains(point) {
+    containsArea(point) {
         return (
-            point.x >= this.x &&
+            point.x + point.w >= this.x &&
             point.x <= this.x + this.w &&
-            point.y >= this.y &&
+            point.y + point.h >= this.y &&
             point.y <= this.y + this.h
         );
     }
