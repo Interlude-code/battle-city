@@ -1,15 +1,22 @@
-import { Rectangle } from '../../utils/rectangle.js';
+import { Rectangle } from '../../entities/rectangle.entity.ts';
 
 export class Quadtree {
+
+    boundary: Rectangle;
+    capacity: number;
+    points: any[];
+    divided: boolean;
+    northeast: Quadtree;
+    northwest: Quadtree;
+    southeast: Quadtree;
+    southwest: Quadtree;
+
+
     constructor(boundary, capacity) {
         this.boundary = boundary; // Límites del quadtree
         this.capacity = capacity; // Capacidad máxima de objetos antes de subdividir
         this.points = []; // Objetos contenidos en este nodo
         this.divided = false; // Indica si el nodo ha sido subdividido
-        this.northeast = null;
-        this.northwest = null;
-        this.southeast = null;
-        this.southwest = null;
     }
 
     // Inserta un objeto en el quadtree

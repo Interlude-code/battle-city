@@ -20,10 +20,10 @@ export const playersKeys = {
 }
 
 export const positionToNumber = {
-    upKey: 0,
-    downKey: 1,
-    leftKey: 2,
-    rightKey: 3
+    up: 0,
+    down: 1,
+    left: 2,
+    right: 3
 }
 
 export const enemyTank = [

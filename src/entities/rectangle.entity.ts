@@ -1,4 +1,9 @@
 export class Rectangle {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+
     constructor(x, y, w, h) {
         this.x = x; // Coordenada x del vértice superior izquierdo
         this.y = y; // Coordenada y del vértice superior izquierdo

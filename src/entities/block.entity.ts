@@ -1,6 +1,14 @@
-import {Rectangle} from "../utils/rectangle.js";
+import {Rectangle} from "./rectangle.entity.ts";
 
 class BlockEntity {
+
+    sizeX: number;
+    sizeY: number;
+    sprite: any;
+    itemNumber: number;
+    haveCollision: boolean;
+    spacialPoint: Rectangle;
+
     constructor(blockInit) {
         this.sizeX = 62
         this.sizeY = 62

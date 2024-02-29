@@ -9,8 +9,7 @@ function debounce(fn, delay) {
 }
 
 function updateKeys(key, isKeyDown, tank) {
-    tank.keysState[key] = isKeyDown;
-    tank.keyPressed = isKeyDown ? key : null;
+    tank.captureKeysState(key, isKeyDown);
 }
 
 function keyUpHandler(event, tank) {
